@@ -15,9 +15,6 @@ const config = require('./config.js');
             return;
         }
 
-        await fs.rm(config.output, { recursive: true, force: true }).catch(e => { });
-        await fs.mkdir(config.output);
-
         const browser = await puppeteer.launch({
             defaultViewport: { height: config.height, width: config.width },
             headless: true
@@ -36,6 +33,11 @@ const config = require('./config.js');
         await page.waitForNavigation();
 
         const url = args[0];
+        const parsedUrl = new URL(url);
+        if (parsedUrl.searchParams.get('page') < 2) {
+            await fs.rm(config.output, { recursive: true, force: true }).catch(e => { });
+            await fs.mkdir(config.output);
+        }
         await page.goto(url, { waitUntil: 'networkidle2' });
 
         const nextButtonSelector = 'a.g-btn-page--next';
