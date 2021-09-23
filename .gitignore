@@ -1,0 +1,5 @@
+
+.DS_Store
+*.pdf
+node_modules
+output
